@@ -1,0 +1,31 @@
+import asyncio
+from aiogram import Bot, Dispatcher
+from aiogram.filters import CommandStart
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+# СЮДА ВСТАВЬТЕ ТОКЕН ИЗ ШАГА 1
+BOT_TOKEN = 8971016183:AAFF5Lo8mNAEu80nodGJVC1ma8IkcmzLXeE
+bot = Bot(token=BOT_TOKEN)
+dp = Dispatcher()
+
+# ТУТ НАСТРОЙТЕ ВАШИ БАНКИ И ССЫЛКИ
+BANKS = {
+    "Сбербанк": "https://www.sberbank.ru",
+    "Тинькофф": "https://www.tinkoff.ru",
+    "Альфа-Банк": "https://alfabank.ru",
+}
+
+@dp.message(CommandStart())
+async def start(message: Message):
+    builder = InlineKeyboardBuilder()
+    for name, link in BANKS.items():
+        builder.button(text=name, url=link)
+    builder.adjust(1) # Кнопки в один столбик
+    await message.answer("Привет! Какой банк тебя интересует?", reply_markup=builder.as_markup())
+
+async def main():
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
